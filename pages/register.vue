@@ -28,12 +28,11 @@
   </section>
 </template>
 <script setup>
-
 definePageMeta({
   layout: 'guest'
 });
 
-const {serverValidationErrors, refreshErrors, clearErrors, hasServerValidationError, getServerValidationError} = useHandleServerValidationErrors();
+const {serverValidationErrors, refreshErrors, clearErrors} = useHandleServerValidationErrors();
 
 const loading = ref(false);
 
@@ -48,11 +47,11 @@ const submit = async () => {
   try {
     const response = await useApiFetch('/register', {method: 'POST', body: {name: name.value, email: email.value, password: password.value, password_confirmation: password_confirmation.value}});
     loading.value = false;
-    console.log(response);
+    useNuxtApp().$toast.success('Registration was successful.');
   } catch(error) {
     refreshErrors(error);
     loading.value = false;
-    console.log(error);
+    useNuxtApp().$toast.error('There are errors in the form.');
   }
 };
 </script>
