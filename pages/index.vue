@@ -5,7 +5,8 @@
 </template>
 <script>
 definePageMeta({
-  layout: 'guest'
+  layout: 'guest',
+  middleware: ["guest"]
 });
 export default {
 
