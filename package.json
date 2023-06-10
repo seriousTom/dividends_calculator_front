@@ -11,6 +11,11 @@
     "nuxt": "3.0.0"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.4.11",
+    "pinia": "^2.1.3",
     "vue3-toastify": "^0.1.10"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }

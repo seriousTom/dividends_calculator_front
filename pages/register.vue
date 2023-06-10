@@ -29,9 +29,12 @@
 </template>
 <script setup>
 definePageMeta({
-  layout: 'guest'
+  layout: 'guest',
+  middleware: ["guest"]
 });
-
+// import { storeToRefs } from 'pinia';
+import {useAuthStore} from '~/store/auth';
+const authStore = useAuthStore();
 const {serverValidationErrors, refreshErrors, clearErrors} = useHandleServerValidationErrors();
 
 const loading = ref(false);
@@ -47,7 +50,10 @@ const submit = async () => {
   try {
     const response = await useApiFetch('/register', {method: 'POST', body: {name: name.value, email: email.value, password: password.value, password_confirmation: password_confirmation.value}});
     loading.value = false;
+
+    authStore.setLoginData(response.name, response.email, response.token);
     useNuxtApp().$toast.success('Registration was successful.');
+    navigateTo('/dashboard');
   } catch(error) {
     refreshErrors(error);
     loading.value = false;
