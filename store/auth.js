@@ -50,5 +50,16 @@ export const useAuthStore = defineStore('authStore', () => {
         return true;
     }
 
-    return {name, email, token, setLoginData, checkLogin};
+    function logout() {
+        const userData = useCookie('userData');
+        userData.value = null;
+
+        localStorage.removeItem('userData');
+
+        token.value = null;
+        name.value = null;
+        email.value = null;
+    }
+
+    return {name, email, token, setLoginData, checkLogin, logout};
 });

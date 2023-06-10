@@ -8,8 +8,12 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <NuxtLink to="/login" class="nav-link" active-class="active">{{ authStore.name }}</NuxtLink>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown08" data-bs-toggle="dropdown" aria-expanded="false">{{ authStore.name }}</a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
+              </ul>
+<!--              <NuxtLink to="/login" class="nav-link" active-class="active"></NuxtLink>-->
             </li>
           </ul>
         </div>
@@ -21,4 +25,8 @@
 <script setup>
 import {useAuthStore} from '~/store/auth';
 const authStore = useAuthStore();
+
+const logout = () => {
+  authStore.logout();
+};
 </script>
