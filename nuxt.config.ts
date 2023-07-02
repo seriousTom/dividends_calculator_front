@@ -23,6 +23,7 @@ export default defineNuxtConfig({
             ]
         }
     },
+    css: ["@/assets/styles.scss"],
     runtimeConfig: {
         // The private keys which are only available within server-side
         apiSecret: '123',
@@ -33,5 +34,14 @@ export default defineNuxtConfig({
     },
     modules: [
         '@pinia/nuxt'
-    ]
+    ],
+    // vite: {
+    //     css: {
+    //         preprocessorOptions: {
+    //             scss: {
+    //                 additionalData: '@use "@/assets/styles.scss";'
+    //             }
+    //         }
+    //     }
+    // }
 })
