@@ -3,24 +3,10 @@
   <section>
     <div class="card text-center">
       <div class="card-header">
-        <ul class="nav nav-tabs card-header-tabs">
-          <li class="nav-item" v-for="(portfolio, pi) in portfolios" :key="'portfolio' + pi">
-            <a class="nav-link" aria-current="true" href="#">{{ portfolio.name }}</a>
-          </li>
-<!--          <li class="nav-item">-->
-<!--            <a class="nav-link active" aria-current="true" href="#">Active</a>-->
-<!--          </li>-->
-<!--          <li class="nav-item">-->
-<!--            <a class="nav-link" href="#">Link</a>-->
-<!--          </li>-->
-<!--          <li class="nav-item">-->
-<!--            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>-->
-<!--          </li>-->
-        </ul>
+        <PortfoliosNavigation :portfolios="portfolios"/>
       </div>
       <div class="card-body">
-        <NuxtPage/>
-        <PortfoliosPortfolio/>
+        <NuxtPage />
       </div>
     </div>
   </section>
@@ -29,5 +15,6 @@
 definePageMeta({
   middleware: ["auth"]
 });
-const {data: portfolios} = await useApiFetch('/portfolios');
+
+const {portfolios, dividends} = await useApiFetch('/portfolios');
 </script>
