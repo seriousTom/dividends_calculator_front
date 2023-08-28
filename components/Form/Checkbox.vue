@@ -1,14 +1,19 @@
 <template>
   <div class="mb-3">
-    <label v-if="label" :for="name" class="form-label">{{ label }}</label>
-    <input :type="type" class="form-control" :id="name" :name="name" v-model="inputValue" @input="onInput" :placeholder="label">
+    <label v-if="label" :for="name" class="form-label">
+      <input type="checkbox" :id="name" :name="name" :value="defaultValue" @change="$emit('update:modelValue', $event.target.checked)" :checked="modelValue" :placeholder="label">
+      {{ label }}
+    </label>
     <div v-if="hasServerValidationError(name, serverValidationErrors)" class="text-danger" v-html="getServerValidationError(name, serverValidationErrors)"></div>
   </div>
 </template>
 <script setup>
 const {getServerValidationError, hasServerValidationError} = useHandleServerValidationErrors();
 
-const props = defineProps({
+defineProps({
+  modelValue: {
+    type: Boolean
+  },
   serverValidationErrors: {
     type: Object,
     required: false,
@@ -21,17 +26,12 @@ const props = defineProps({
     type: String,
     required: true
   },
-  type: {
-    type: String,
+  defaultValue: {
+    type: Boolean,
     required: false,
-    default: 'text'
+    default: true
   }
 });
 
-const inputValue = ref('');
-const emit = defineEmits(['update:modelValue']);
-
-const onInput = () => {
-  emit('update:modelValue', inputValue.value);
-}
+defineEmits(['update:modelValue']);
 </script>

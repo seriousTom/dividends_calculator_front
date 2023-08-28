@@ -1,5 +1,8 @@
 <template>
   <section>
+    <div class="mb-3">
+      <button @click="showAddDividendsForm = !showAddDividendsForm" type="button" class="btn btn-primary">Add dividends</button>
+    </div>
     <div class="card text-center">
       <div class="card-header">
         <PortfoliosNavigation :portfolios="portfolios"/>
@@ -9,6 +12,9 @@
       </div>
     </div>
   </section>
+  <CommonModal modal-title="Add dividends" :show-modal="showAddDividendsForm" @close-modal="showAddDividendsForm = !showAddDividendsForm">
+    <PortfoliosDividendsForm @portfolioCreated="portfolioCreated" :portfolios="portfolios" :selected-portfolio="selectedPortfolio"/>
+  </CommonModal>
 </template>
 <script setup>
 definePageMeta({
@@ -18,9 +24,17 @@ definePageMeta({
 const route = useRoute();
 const selectedPortfolioId = route.params.id ?? null;
 
-useApiFetch('/portfolios?portfolio_id=' + selectedPortfolioId);
-const {data: portfolios} = await useApiFetch('/portfolios?portfolio_id=' + selectedPortfolioId);
+const showAddDividendsForm = ref(false);
 
-const selectedPortfolio = portfolios.find(portfolio => selectedPortfolioId == portfolio.id);
+const portfolios = ref([]);
+
+const portfoliosInit = await useApiFetch('/portfolios?portfolio_id=' + selectedPortfolioId);
+portfolios.value = portfoliosInit.data;
+
+const selectedPortfolio = portfolios.value.find(portfolio => selectedPortfolioId == portfolio.id);
+
+const portfolioCreated = (newPortfolios) => {
+  portfolios.value = newPortfolios;
+}
 
 </script>
