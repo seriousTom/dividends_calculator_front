@@ -38,9 +38,20 @@
             <button type="button" class="btn btn-danger" @click="removeDividend(di)">Remove</button>
           </div>
         </div>
-        <div class="row mt-3">
-          <div class="col-md-12">
-          </div>
+        <div class="row mt-3" v-if="hasServerValidationError('dividends.' + di + '.company_id')">
+          <div class="col-md-12 text-danger" v-html="getServerValidationError('dividends.' + di + '.company_id')"></div>
+        </div>
+        <div class="row mt-3" v-if="hasServerValidationError('dividends.' + di + '.amount')">
+          <div class="col-md-12 text-danger" v-html="getServerValidationError('dividends.' + di + '.amount')"></div>
+        </div>
+        <div class="row mt-3" v-if="hasServerValidationError('dividends.' + di + '.taxes_amount')">
+          <div class="col-md-12 text-danger" v-html="getServerValidationError('dividends.' + di + '.taxes_amount')"></div>
+        </div>
+        <div class="row mt-3" v-if="hasServerValidationError('dividends.' + di + '.currency_id')">
+          <div class="col-md-12 text-danger" v-html="getServerValidationError('dividends.' + di + '.currency_id')"></div>
+        </div>
+        <div class="row mt-3" v-if="hasServerValidationError('dividends.' + di + '.date')">
+          <div class="col-md-12 text-danger" v-html="getServerValidationError('dividends.' + di + '.date')"></div>
         </div>
       </div>
       <div class="row mt-3">
@@ -48,9 +59,15 @@
           <button type="button" class="btn btn-primary me-1" @click="addDividend">Add</button>
         </div>
       </div>
+      <div class="row mt-3" v-if="hasServerValidationError('dividends')">
+        <div class="col-md-12 text-danger" v-html="getServerValidationError('dividends')"></div>
+      </div>
       <div class="row mt-3">
         <div class="col-md-12">
-          <button type="button" class=" btn btn-primary w-100" @click="saveDividends">Submit</button>
+          <button type="button" class=" btn btn-primary w-100" @click="saveDividends" :disabled="loading">
+            <template v-if="loading">Loading...</template>
+            <template v-else>Submit</template>
+          </button>
         </div>
       </div>
     </div>
@@ -59,6 +76,8 @@
 <script setup>
 import flatPickr from 'vue-flatpickr-component';
 import vSelect from "vue-select";
+
+const {serverValidationErrors, refreshErrors, clearErrors, hasServerValidationError, getServerValidationError} = useHandleServerValidationErrors();
 
 const props = defineProps({
   selectedPortfolio: {
@@ -71,7 +90,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['portfolioCreated']);
+const emit = defineEmits(['portfolioCreated', 'dividendsCreated']);
 
 const {data: currencies} = await useApiFetch('/currencies');
 
@@ -135,7 +154,21 @@ const searchCompanies = async (search, loading) => {
   loading(false);
 };
 
+const loading = ref(false);
+
 const saveDividends = async () => {
-  const response = await useApiFetch('/dividends/' + selectedPortfolioId.value + '/create', {method: 'POST', body: dividends.value});
+  loading.value = true;
+  clearErrors();
+  try {
+    const {data} = await useApiFetch('/dividends/' + selectedPortfolioId.value + '/create', {method: 'POST', body: {dividends: dividends.value}});
+    dividends.value = [];
+    loading.value = false;
+    emit('dividendsCreated', data);
+    useNuxtApp().$toast.success('Dividends added.');
+  } catch (error) {
+    loading.value = false;
+    refreshErrors(error);
+    useNuxtApp().$toast.error('There are errors in the form.');
+  }
 };
 </script>

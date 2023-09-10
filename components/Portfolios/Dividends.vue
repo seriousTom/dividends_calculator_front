@@ -65,4 +65,6 @@ const pageChanged = async (page) => {
 };
 
 fetchDividends(currentPage);
+
+defineExpose({fetchDividends});
 </script>

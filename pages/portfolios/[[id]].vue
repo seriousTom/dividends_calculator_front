@@ -8,18 +8,20 @@
         <PortfoliosNavigation :portfolios="portfolios"/>
       </div>
       <div class="card-body">
-        <PortfoliosDividends :portfolio="selectedPortfolio"/>
+        <PortfoliosDividends ref="dividendsTable" :portfolio="selectedPortfolio"/>
       </div>
     </div>
   </section>
   <CommonModal modal-title="Add dividends" :show-modal="showAddDividendsForm" @close-modal="showAddDividendsForm = !showAddDividendsForm">
-    <PortfoliosDividendsForm @portfolioCreated="portfolioCreated" :portfolios="portfolios" :selected-portfolio="selectedPortfolio"/>
+    <PortfoliosDividendsForm @dividendsCreated="dividendsCreated" @portfolioCreated="portfolioCreated" :portfolios="portfolios" :selected-portfolio="selectedPortfolio"/>
   </CommonModal>
 </template>
 <script setup>
 definePageMeta({
   middleware: ["auth"]
 });
+
+const dividendsTable = ref();
 
 const route = useRoute();
 const selectedPortfolioId = route.params.id ?? null;
@@ -35,6 +37,11 @@ const selectedPortfolio = portfolios.value.find(portfolio => selectedPortfolioId
 
 const portfolioCreated = (newPortfolios) => {
   portfolios.value = newPortfolios;
+}
+
+const dividendsCreated = () => {
+  dividendsTable.value.fetchDividends(1);
+  showAddDividendsForm.value = false;
 }
 
 </script>
