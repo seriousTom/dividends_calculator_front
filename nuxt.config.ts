@@ -23,7 +23,7 @@ export default defineNuxtConfig({
             ]
         }
     },
-    css: ["@/assets/styles.scss"],
+    css: ["@/assets/styles.scss", '@fortawesome/fontawesome-svg-core/styles.css'],
     runtimeConfig: {
         // The private keys which are only available within server-side
         apiSecret: '123',

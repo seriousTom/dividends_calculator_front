@@ -8,6 +8,7 @@
           <th>Amount</th>
           <th>Taxes amount</th>
           <th>Amount after taxes</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -20,6 +21,10 @@
           <td>{{ dividend.amount }} {{ dividend.currency.symbol }}</td>
           <td>{{ dividend.taxes_amount }} {{ dividend.currency.symbol }}</td>
           <td>{{ dividend.amount_after_taxes }} {{ dividend.currency.symbol }}</td>
+          <td>
+            <a href=""><font-awesome-icon icon="fa-solid fa-pen" /></a>
+            <a href="" class="text-danger"><font-awesome-icon icon="fa-solid fa-trash-can" /></a>
+          </td>
         </tr>
       </tbody>
     </table>
