@@ -3,12 +3,12 @@
     <div class="mb-3">
       <button @click="showAddDividendsForm = !showAddDividendsForm" type="button" class="btn btn-primary">Add dividends</button>
     </div>
-    <div class="card text-center">
+    <div class="card">
       <div class="card-header">
         <PortfoliosNavigation :portfolios="portfolios"/>
       </div>
       <div class="card-body">
-        <PortfoliosDividends ref="dividendsTable" :portfolio="selectedPortfolio"/>
+        <PortfoliosDividends ref="dividendsTable" :portfolios="portfolios" :portfolio="selectedPortfolio"/>
       </div>
     </div>
   </section>

@@ -76,6 +76,7 @@
 <script setup>
 import flatPickr from 'vue-flatpickr-component';
 import vSelect from "vue-select";
+import useCompaniesSelect from "../../composables/useCompaniesSelect";
 
 const {serverValidationErrors, refreshErrors, clearErrors, hasServerValidationError, getServerValidationError} = useHandleServerValidationErrors();
 
@@ -135,24 +136,27 @@ const portfolioCreated = (portfolio) => {
   emit('portfolioCreated', props.portfolios);
 };
 
-//fetch and search select2 options
-const fetchCompanies = async (searchString = '') => {
-  const {data: companies} = await useApiFetch('/companies?name=' + searchString);
-
-  return companies.map((element) => {
-    element.label = element.name;
-    return element;
-  })
-};
-
-const companiesOptions = ref([]);
+const {fetchCompanies, companiesOptions, searchCompanies} = useCompaniesSelect();
 companiesOptions.value = await fetchCompanies();
 
-const searchCompanies = async (search, loading) => {
-  loading(true);
-  companiesOptions.value = await fetchCompanies(search);
-  loading(false);
-};
+//fetch and search select2 options
+// const fetchCompanies = async (searchString = '') => {
+//   const {data: companies} = await useApiFetch('/companies?name=' + searchString);
+//
+//   return companies.map((element) => {
+//     element.label = element.name;
+//     return element;
+//   })
+// };
+//
+// const companiesOptions = ref([]);
+// companiesOptions.value = await fetchCompanies();
+//
+// const searchCompanies = async (search, loading) => {
+//   loading(true);
+//   companiesOptions.value = await fetchCompanies(search);
+//   loading(false);
+// };
 
 const loading = ref(false);
 

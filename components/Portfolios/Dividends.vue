@@ -23,7 +23,7 @@
           <td>{{ dividend.amount_after_taxes }} {{ dividend.currency.symbol }}</td>
           <td>
             <template v-if="!dividend.loading">
-              <a href=""><font-awesome-icon icon="fa-solid fa-pen" /></a>
+              <a href="" class="me-2" @click.prevent="showEditDividendFormClick(dividend)"><font-awesome-icon icon="fa-solid fa-pen" /></a>
               <a href="" class="text-danger" @click.prevent="deleteDividend(di)"><font-awesome-icon icon="fa-solid fa-trash-can" /></a>
             </template>
             <template v-else>
@@ -39,6 +39,9 @@
         :current-page="paginationData.current_page"
         :total-pages="paginationData.last_page" />
   </div>
+  <CommonModal modal-title="Edit dividend" :show-modal="showEditDividendForm" @close-modal="showEditDividendForm = !showEditDividendForm">
+    <PortfoliosDividendEditForm @dividendEdited="dividendEdited" :portfolios="portfolios" :portfolio="portfolio" :dividend="dividendBeingEdited"/>
+  </CommonModal>
 </template>
 <script setup>
 import useApiFetch from "../../composables/useApiFetch";
@@ -47,6 +50,10 @@ const props = defineProps({
   portfolio: {
     type: Object,
     required: false,
+  },
+  portfolios: {
+    type: Array,
+    required: true
   }
 });
 
@@ -56,6 +63,9 @@ const currentPage = route.query.page ?? null;
 const dividendsLoading = ref(false);
 const dividends = ref([]);
 const paginationData = ref({});
+
+const dividendBeingEdited = ref({});
+const showEditDividendForm = ref(false);
 
 const fetchDividends = (currentPage) => {
   dividendsLoading.value = true;
@@ -69,8 +79,25 @@ const fetchDividends = (currentPage) => {
   });
 };
 
+const showEditDividendFormClick = (dividend) => {
+  dividendBeingEdited.value = dividend;
+  showEditDividendForm.value = true;
+}
+
+const dividendEdited = (dividend) => {
+  const index = dividends.value.findIndex((d) => {
+    return d.id == dividend.id;
+  });
+
+  dividends.value[index] = dividend;
+
+  showEditDividendForm.value = false;
+}
+
 const deleteDividend = async (index) => {
-  window.confirm('Do you really wish to delete dividend?');
+  if(!window.confirm('Do you really wish to delete dividend?')) {
+    return;
+  }
 
   dividends.value[index].loading = true;
 
