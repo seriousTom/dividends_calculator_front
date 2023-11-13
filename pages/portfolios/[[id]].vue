@@ -1,14 +1,16 @@
 <template>
   <section>
-    <div class="mb-3">
-      <button @click="showAddDividendsForm = !showAddDividendsForm" type="button" class="btn btn-primary">Add dividends</button>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <PortfoliosNavigation :portfolios="portfolios"/>
+    <div class="container py-5">
+      <div class="mb-3">
+        <button @click="showAddDividendsForm = !showAddDividendsForm" type="button" class="btn btn-primary">Add dividends</button>
       </div>
-      <div class="card-body">
-        <PortfoliosDividends ref="dividendsTable" :portfolios="portfolios" :portfolio="selectedPortfolio"/>
+      <div class="card">
+        <div class="card-header">
+          <PortfoliosNavigation :portfolios="portfolios"/>
+        </div>
+        <div class="card-body">
+          <PortfoliosDividends ref="dividendsTable" :portfolios="portfolios" :portfolio="selectedPortfolio"/>
+        </div>
       </div>
     </div>
   </section>
@@ -21,6 +23,7 @@ definePageMeta({
   middleware: ["auth"]
 });
 
+//reference to DividendsTable component
 const dividendsTable = ref();
 
 const route = useRoute();
@@ -40,6 +43,7 @@ const portfolioCreated = (newPortfolios) => {
 }
 
 const dividendsCreated = () => {
+  //call method existing in DividendsTable component
   dividendsTable.value.fetchDividends(1);
   showAddDividendsForm.value = false;
 }

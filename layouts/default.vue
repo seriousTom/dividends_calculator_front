@@ -3,7 +3,7 @@
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
-        <NuxtLink to="/dashboard" class="navbar-brand" active-class="active">Dashboard</NuxtLink>
+        <NuxtLink to="/dashboard" class="navbar-brand" active-class="active">Home</NuxtLink>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -12,6 +12,9 @@
             <li class="nav-item">
               <NuxtLink to="/portfolios" class="nav-link" active-class="active">Portfolios</NuxtLink>
 <!--              <a class="nav-link" href="#">Portfolios</a>-->
+            </li>
+            <li class="nav-item">
+              <NuxtLink to="/statistics" class="nav-link" active-class="active">Statistics</NuxtLink>
             </li>
           </ul>
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -26,9 +29,7 @@
       </div>
     </nav>
   </header>
-  <div class="container py-5">
-    <slot />
-  </div>
+  <slot />
 </template>
 <script setup>
 import {useAuthStore} from '~/store/auth';
