@@ -5,20 +5,25 @@
 import Chart from "chart.js/auto";
 
 const props = defineProps({
-  monthlyStatisticData: {
+  periodStatisticData: {
     type: Array,
     required: false,
     default: []
+  },
+  chartTitle: {
+    type: String,
+    required: false,
+    default: ''
   }
 });
 
-watch(() => props.monthlyStatisticData, () => {
-  drawChart(props.monthlyStatisticData);
+watch(() => props.periodStatisticData, () => {
+  drawChart(props.periodStatisticData);
 });
 
 onMounted(() => {
   initChart();
-  drawChart(props.monthlyStatisticData);
+  drawChart(props.periodStatisticData);
 });
 
 const monthlyDividendsCanvas = ref(null);
@@ -47,6 +52,12 @@ const initChart = (labels = [], data = []) => {
           ]
         },
         options: {
+          plugins: {
+            title: {
+              display: true,
+              text: props.chartTitle
+            }
+          },
           scales: {
             y: {
               ticks: {
@@ -77,7 +88,7 @@ const prepareMonthlyDividendsChartData = (chartData) => {
   const amountAfterTaxesData = [];
 
   Object.keys(chartData).forEach((key) => {
-    labels.push(chartData[key].month_string);
+    labels.push(chartData[key].label);
     amountData.push(chartData[key].amount);
     taxesAmountData.push(chartData[key].taxes_amount);
     amountAfterTaxesData.push(chartData[key].amount_after_taxes);

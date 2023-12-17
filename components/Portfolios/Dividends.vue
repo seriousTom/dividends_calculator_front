@@ -45,6 +45,7 @@
 </template>
 <script setup>
 import useApiFetch from "../../composables/useApiFetch";
+import useChangeUrlParameter from "../../composables/useChangeUrlParameter";
 
 const props = defineProps({
   portfolio: {
@@ -111,12 +112,11 @@ const deleteDividend = async (index) => {
   dividends.value[index].loading = false;
 }
 
-const pageChanged = async (page) => {
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  urlSearchParams.set('page', page);
+const {changeUrlParameters} = useChangeUrlParameter();
 
-  const newUrl = `${window.location.pathname}?${urlSearchParams.toString()}`;
-  window.history.replaceState({}, document.title, newUrl);
+const pageChanged = async (page) => {
+  changeUrlParameters('page', page);
+
 
   fetchDividends(page);
 };
