@@ -3,7 +3,10 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Date</th>
+          <th>
+            Date
+            <CommonSortingLinks fieldToSort="date" @sorted="sorted" />
+          </th>
           <th>Company</th>
           <th>Amount</th>
           <th>Taxes amount</th>
@@ -79,6 +82,10 @@ const fetchDividends = (currentPage) => {
     dividendsLoading.value = false;
   });
 };
+
+const sorted = (field, order) => {
+  console.log(field, order);
+}
 
 const showEditDividendFormClick = (dividend) => {
   dividendBeingEdited.value = dividend;
