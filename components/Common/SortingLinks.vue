@@ -1,7 +1,7 @@
 <template>
   <font-awesome-icon v-if="fieldToSort == activeField && order == 'asc'" icon="fa-solid fa-arrow-up" />
   <a v-else @click.prevent="sortingClicked(fieldToSort, 'asc')" href="" class="me-1"><font-awesome-icon icon="fa-solid fa-arrow-up" /></a>
-  <font-awesome-icon v-if="fieldToSort != activeField && order == 'asc'" icon="fa-solid fa-arrow-down" />
+  <font-awesome-icon v-if="fieldToSort == activeField && order == 'desc'" icon="fa-solid fa-arrow-down" />
   <a v-else @click.prevent="sortingClicked(fieldToSort, 'desc')" href=""><font-awesome-icon icon="fa-solid fa-arrow-down" /></a>
 </template>
 <script setup>

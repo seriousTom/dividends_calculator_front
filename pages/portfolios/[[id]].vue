@@ -44,7 +44,7 @@ const portfolioCreated = (newPortfolios) => {
 
 const dividendsCreated = () => {
   //call method existing in DividendsTable component
-  dividendsTable.value.fetchDividends(1);
+  dividendsTable.value.fetchDividends({page: 1});
   showAddDividendsForm.value = false;
 }
 

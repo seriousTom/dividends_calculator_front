@@ -5,7 +5,7 @@
         <tr>
           <th>
             Date
-            <CommonSortingLinks fieldToSort="date" @sorted="sorted" />
+            <CommonSortingLinks :activeField="sortByField" :order="fieldOrder" fieldToSort="date" @sorted="sorted" />
           </th>
           <th>Company</th>
           <th>Amount</th>
@@ -63,6 +63,8 @@ const props = defineProps({
 
 const route = useRoute();
 const currentPage = route.query.page ?? null;
+const sortByField = ref(null);
+const fieldOrder = ref(null);
 
 const dividendsLoading = ref(false);
 const dividends = ref([]);
@@ -71,9 +73,12 @@ const paginationData = ref({});
 const dividendBeingEdited = ref({});
 const showEditDividendForm = ref(false);
 
-const fetchDividends = (currentPage) => {
+const fetchDividends = (params) => {
   dividendsLoading.value = true;
-  useApiFetch('/dividends' + (props.portfolio ? '/' + props.portfolio.id : '') + (currentPage ? '?page=' + currentPage : '')).then((data) => {
+
+  const queryString = objectToQueryString(params);
+
+  useApiFetch('/dividends' + (props.portfolio ? '/' + props.portfolio.id : '') + '?' + queryString).then((data) => {
     dividends.value = data.data.map((value) => {
       value.loading = false;
       return value;
@@ -81,10 +86,32 @@ const fetchDividends = (currentPage) => {
     paginationData.value = data.meta;
     dividendsLoading.value = false;
   });
+
+  // useApiFetch('/dividends' + (props.portfolio ? '/' + props.portfolio.id : '') + (params.page ? '?page=' + params.page : '')).then((data) => {
+  //   dividends.value = data.data.map((value) => {
+  //     value.loading = false;
+  //     return value;
+  //   });
+  //   paginationData.value = data.meta;
+  //   dividendsLoading.value = false;
+  // });
 };
 
 const sorted = (field, order) => {
-  console.log(field, order);
+  sortByField.value = field;
+  fieldOrder.value= order;
+
+  fetchDividends({
+    order_by: field,
+    order: order
+  });
+}
+
+//todo: move to composable
+const objectToQueryString = (obj) => {
+  return Object.keys(obj)
+      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`)
+      .join('&');
 }
 
 const showEditDividendFormClick = (dividend) => {
@@ -125,10 +152,10 @@ const pageChanged = async (page) => {
   changeUrlParameters('page', page);
 
 
-  fetchDividends(page);
+  fetchDividends({page: page});
 };
 
-fetchDividends(currentPage);
+fetchDividends({page: currentPage});
 
 defineExpose({fetchDividends});
 </script>
