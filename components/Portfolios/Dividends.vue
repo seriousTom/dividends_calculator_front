@@ -5,11 +5,19 @@
         <tr>
           <th>
             Date
-            <CommonSortingLinks :activeField="sortByField" :order="fieldOrder" fieldToSort="date" @sorted="sorted" />
+            <CommonSortingLinks :activeField="filters.order_by" :order="filters.order" fieldToSort="date" @sorted="sorted" />
           </th>
-          <th>Company</th>
-          <th>Amount</th>
-          <th>Taxes amount</th>
+          <th>
+            Company
+          </th>
+          <th>
+            Amount
+            <CommonSortingLinks :activeField="filters.order_by" :order="filters.order" fieldToSort="amount" @sorted="sorted" />
+          </th>
+          <th>
+            Taxes amount
+            <CommonSortingLinks :activeField="filters.order_by" :order="filters.order" fieldToSort="taxes_amount" @sorted="sorted" />
+          </th>
           <th>Amount after taxes</th>
           <th></th>
         </tr>
@@ -62,9 +70,15 @@ const props = defineProps({
 });
 
 const route = useRoute();
+const router = useRouter();
 const currentPage = route.query.page ?? null;
-const sortByField = ref(null);
-const fieldOrder = ref(null);
+
+const filters = ref(route.query);
+
+// const filters = ref({
+//   order_by: null,
+//   order: null
+// });
 
 const dividendsLoading = ref(false);
 const dividends = ref([]);
@@ -86,25 +100,21 @@ const fetchDividends = (params) => {
     paginationData.value = data.meta;
     dividendsLoading.value = false;
   });
-
-  // useApiFetch('/dividends' + (props.portfolio ? '/' + props.portfolio.id : '') + (params.page ? '?page=' + params.page : '')).then((data) => {
-  //   dividends.value = data.data.map((value) => {
-  //     value.loading = false;
-  //     return value;
-  //   });
-  //   paginationData.value = data.meta;
-  //   dividendsLoading.value = false;
-  // });
 };
 
 const sorted = (field, order) => {
-  sortByField.value = field;
-  fieldOrder.value= order;
-
-  fetchDividends({
+  filters.value = {
     order_by: field,
     order: order
-  });
+  };
+  // filters.value.order_by = field;
+  // filters.value.order = order;
+
+  router.push({
+    query: filters.value,
+  })
+
+  fetchDividends(filters.value);
 }
 
 //todo: move to composable
@@ -151,11 +161,12 @@ const {changeUrlParameters} = useChangeUrlParameter();
 const pageChanged = async (page) => {
   changeUrlParameters('page', page);
 
+  filters.value.page = page;
 
-  fetchDividends({page: page});
+  fetchDividends(filters.value);
 };
 
-fetchDividends({page: currentPage});
+fetchDividends(filters.value);
 
 defineExpose({fetchDividends});
 </script>

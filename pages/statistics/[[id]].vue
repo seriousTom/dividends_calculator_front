@@ -53,7 +53,7 @@
         <div class="col-md-3">
           <div class="card ">
             <div class="card-body">
-              <template v-if="statistic.all_time_most_dividends_received_from_company">
+              <template v-if="statistic.most_dividends_received_from_company_in_year">
                 <div class="text-center fs-5 fw-bold">In {{ statistic.year }} most dividends received from</div>
                 <div class="text-center fs-3 text-secondary mt-2"><strong>{{ statistic.most_dividends_received_from_company_in_year.name }}</strong></div>
                 <div class="text-center fs-2 fw-bold mt-2">{{ statistic.most_dividends_received_from_company_in_year.dividends_sum }} $</div>
@@ -121,8 +121,8 @@ const getStatistic = async (portfolioId, year) => {
   statisticLoading.value = true;
   statistic.value = await useApiFetch('/statistic?portfolio_id=' + (portfolioId ?? '') + '&year=' + (year ?? ''));
   statisticLoading.value = false;
-  selectedYear.value = statistic.value.year;
   years.value = getYearsArray(statistic.value.oldest_year);
+  selectedYear.value = statistic.value.year;
 };
 
 const getYearsArray = (oldestYear) => {
