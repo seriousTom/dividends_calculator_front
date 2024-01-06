@@ -9,6 +9,7 @@
           </th>
           <th>
             Company
+            <CommonSortingLinks :activeField="filters.order_by" :order="filters.order" fieldToSort="company_name" @sorted="sorted" />
           </th>
           <th>
             Amount
@@ -18,7 +19,10 @@
             Taxes amount
             <CommonSortingLinks :activeField="filters.order_by" :order="filters.order" fieldToSort="taxes_amount" @sorted="sorted" />
           </th>
-          <th>Amount after taxes</th>
+          <th>
+            Amount after taxes
+            <CommonSortingLinks :activeField="filters.order_by" :order="filters.order" fieldToSort="amount_after_taxes" @sorted="sorted" />
+          </th>
           <th></th>
         </tr>
       </thead>
