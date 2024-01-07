@@ -1,5 +1,24 @@
 <template>
   <div>
+    <form class="my-3">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="date_from">Date from</label>
+            <input type="date" id="date_from" name="date_from" v-model="filters.date_from" class="form-control">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="date_to">Date to</label>
+            <input type="date" id="date_to" name="date_to" v-model="filters.date_to" class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="mt-2">
+        <button type="button" class="btn btn-primary" @click="filter">Filter</button>
+      </div>
+    </form>
     <table class="table">
       <thead>
         <tr>
@@ -116,7 +135,15 @@ const sorted = (field, order) => {
 
   router.push({
     query: filters.value,
-  })
+  });
+
+  fetchDividends(filters.value);
+}
+
+const filter = () => {
+  router.push({
+    query: filters.value,
+  });
 
   fetchDividends(filters.value);
 }
