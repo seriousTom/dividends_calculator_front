@@ -111,6 +111,10 @@ const dividendBeingEdited = ref({});
 const showEditDividendForm = ref(false);
 
 const fetchDividends = (params) => {
+  router.push({
+    query: filters.value,
+  });
+
   dividendsLoading.value = true;
 
   const queryString = objectToQueryString(params);
@@ -126,24 +130,24 @@ const fetchDividends = (params) => {
 };
 
 const sorted = (field, order) => {
-  filters.value = {
-    order_by: field,
-    order: order
-  };
-  // filters.value.order_by = field;
-  // filters.value.order = order;
+  // filters.value = {
+  //   order_by: field,
+  //   order: order
+  // };
+  filters.value.order_by = field;
+  filters.value.order = order;
 
-  router.push({
-    query: filters.value,
-  });
+  // router.push({
+  //   query: {...filters.value},
+  // });
 
   fetchDividends(filters.value);
 }
 
 const filter = () => {
-  router.push({
-    query: filters.value,
-  });
+  // router.push({
+  //   query: filters.value,
+  // });
 
   fetchDividends(filters.value);
 }
