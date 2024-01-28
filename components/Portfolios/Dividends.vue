@@ -94,14 +94,15 @@ const props = defineProps({
 
 const route = useRoute();
 const router = useRouter();
-const currentPage = route.query.page ?? null;
+// const currentPage = route.query.page ?? null;
 
-const filters = ref(route.query);
-
-// const filters = ref({
-//   order_by: null,
-//   order: null
-// });
+const filters = ref({
+  date_from: route.query.date_from ?? null,
+  date_to: route.query.date_to ?? null,
+  order_by: route.query.order_by ?? null,
+  order: route.query.order ?? null,
+  page: route.query.page ?? null,
+});
 
 const dividendsLoading = ref(false);
 const dividends = ref([]);
@@ -111,9 +112,12 @@ const dividendBeingEdited = ref({});
 const showEditDividendForm = ref(false);
 
 const fetchDividends = (params) => {
-  router.push({
-    query: filters.value,
-  });
+  params = removeNullAndEmpty(params);
+
+  //for some reason not all values are pushed to url from filters object, so it's put in useApiFetch callback
+  // router.push({
+  //   query: params
+  // });
 
   dividendsLoading.value = true;
 
@@ -126,29 +130,23 @@ const fetchDividends = (params) => {
     });
     paginationData.value = data.meta;
     dividendsLoading.value = false;
+
+    router.push({
+      query: params
+    });
   });
 };
 
 const sorted = (field, order) => {
-  // filters.value = {
-  //   order_by: field,
-  //   order: order
-  // };
+
   filters.value.order_by = field;
   filters.value.order = order;
-
-  // router.push({
-  //   query: {...filters.value},
-  // });
 
   fetchDividends(filters.value);
 }
 
 const filter = () => {
-  // router.push({
-  //   query: filters.value,
-  // });
-
+  filters.value.page = 1;
   fetchDividends(filters.value);
 }
 
@@ -157,6 +155,19 @@ const objectToQueryString = (obj) => {
   return Object.keys(obj)
       .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`)
       .join('&');
+}
+
+//todo: move to composable
+const removeNullAndEmpty = (originalObj) => {
+  const newObj = {};
+
+  for (const key in originalObj) {
+    if (originalObj[key] !== null && originalObj[key] !== '') {
+      newObj[key] = originalObj[key];
+    }
+  }
+
+  return newObj;
 }
 
 const showEditDividendFormClick = (dividend) => {
@@ -191,10 +202,10 @@ const deleteDividend = async (index) => {
   dividends.value[index].loading = false;
 }
 
-const {changeUrlParameters} = useChangeUrlParameter();
+// const {changeUrlParameters} = useChangeUrlParameter();
 
-const pageChanged = async (page) => {
-  changeUrlParameters('page', page);
+const pageChanged = (page) => {
+  // changeUrlParameters('page', page);
 
   filters.value.page = page;
 
