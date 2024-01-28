@@ -5,13 +5,26 @@
         <div class="col-md-3">
           <div class="form-group">
             <label for="date_from">Date from</label>
-            <input type="date" id="date_from" name="date_from" v-model="filters.date_from" class="form-control">
+            <flat-pickr
+                id="date_from"
+                v-model="filters.date_from"
+                :config="datePickerConfig"
+                class="form-control"
+                name="date_to"
+                autocomplete="off">
+            </flat-pickr>
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
             <label for="date_to">Date to</label>
-            <input type="date" id="date_to" name="date_to" v-model="filters.date_to" class="form-control">
+            <flat-pickr
+                id="date_to"
+                v-model="filters.date_to"
+                class="form-control"
+                name="date_to"
+                autocomplete="off">
+            </flat-pickr>
           </div>
         </div>
       </div>
@@ -79,7 +92,7 @@
 </template>
 <script setup>
 import useApiFetch from "../../composables/useApiFetch";
-import useChangeUrlParameter from "../../composables/useChangeUrlParameter";
+import FlatPickr from 'vue-flatpickr-component';
 
 const props = defineProps({
   portfolio: {
@@ -202,11 +215,7 @@ const deleteDividend = async (index) => {
   dividends.value[index].loading = false;
 }
 
-// const {changeUrlParameters} = useChangeUrlParameter();
-
 const pageChanged = (page) => {
-  // changeUrlParameters('page', page);
-
   filters.value.page = page;
 
   fetchDividends(filters.value);
