@@ -4,6 +4,16 @@
       <div class="row">
         <div class="col-md-3">
           <div class="form-group">
+            <label>Company</label>
+            <vSelect @option:selected="companyChanged" v-model="selectedCompany" :options="companiesOptions" @search="searchCompanies">
+<!--              <template #selected-option="{ id, label, name }">-->
+<!--                {{ id }} - {{ label }}  - {{ name }}-->
+<!--              </template>-->
+            </vSelect>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
             <label for="date_from">Date from</label>
             <flat-pickr
                 id="date_from"
@@ -91,8 +101,10 @@
   </CommonModal>
 </template>
 <script setup>
+import vSelect from "vue-select";
 import useApiFetch from "../../composables/useApiFetch";
 import FlatPickr from 'vue-flatpickr-component';
+import useCompaniesSelect from "../../composables/useCompaniesSelect";
 
 const props = defineProps({
   portfolio: {
@@ -109,12 +121,33 @@ const route = useRoute();
 const router = useRouter();
 // const currentPage = route.query.page ?? null;
 
+const {fetchCompanies, companiesOptions, searchCompanies} = useCompaniesSelect();
+
+const selectedCompany = ref(null);
+
+const companyChanged = (option) => {
+  // filters.value.company_id = option.id;
+};
+companiesOptions.value = await fetchCompanies('', route.query.company_id ?? '');
+if(companiesOptions.value.length) {
+  selectedCompany.value = companiesOptions.value.find(company => company.id == route.query.company_id);
+}
+
 const filters = ref({
+  company_id: route.query.company_id ?? null,
   date_from: route.query.date_from ?? null,
   date_to: route.query.date_to ?? null,
   order_by: route.query.order_by ?? null,
   order: route.query.order ?? null,
   page: route.query.page ?? null,
+});
+
+watch(selectedCompany, async () => {
+  if(selectedCompany.value) {
+    filters.value.company_id = selectedCompany.value.id;
+  } else {
+    filters.value.company_id = null;
+  }
 });
 
 const dividendsLoading = ref(false);

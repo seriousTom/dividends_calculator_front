@@ -1,6 +1,6 @@
 export default () => {
-    const fetchCompanies = async (searchString = '') => {
-        const {data: companies} = await useApiFetch('/companies?name=' + searchString);
+    const fetchCompanies = async (searchString = '', companyId = '') => {
+        const {data: companies} = await useApiFetch('/companies?name=' + searchString + '&company_id=' + companyId);
 
         return companies.map((element) => {
             element.label = element.name;
@@ -10,11 +10,14 @@ export default () => {
 
     const companiesOptions = ref([]);
 
+    const searchString = ref('');
+
     const searchCompanies = async (search, loading) => {
         loading(true);
+        searchString.value = search;
         companiesOptions.value = await fetchCompanies(search);
         loading(false);
     };
 
-    return {fetchCompanies, companiesOptions, searchCompanies};
+    return {fetchCompanies, companiesOptions, searchCompanies, searchString};
 }
