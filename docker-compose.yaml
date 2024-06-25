@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  frontend:
+    build:
+      context: ./
+      dockerfile: ./Docker/Dockerfile
+    container_name: dividends_calculator_frontend
+    ports:
+      - 3003:3000
+#      - 24678:24678
+    volumes:
+      - .:/app
+#      - /app/node_modules
+    stdin_open: true
+    tty: true
