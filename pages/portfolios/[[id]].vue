@@ -14,7 +14,7 @@
       </div>
     </div>
   </section>
-  <CommonModal modal-title="Add dividends" :show-modal="showAddDividendsForm" @close-modal="showAddDividendsForm = !showAddDividendsForm">
+  <CommonModal modal-title="Add dividends" v-if="showAddDividendsForm" :show-modal="showAddDividendsForm" @close-modal="showAddDividendsForm = !showAddDividendsForm">
     <PortfoliosDividendsForm @dividendsCreated="dividendsCreated" @portfolioCreated="portfolioCreated" :portfolios="portfolios" :selected-portfolio="selectedPortfolio"/>
   </CommonModal>
 </template>

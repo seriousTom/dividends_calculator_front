@@ -96,7 +96,7 @@
         :current-page="paginationData.current_page"
         :total-pages="paginationData.last_page" />
   </div>
-  <CommonModal modal-title="Edit dividend" :show-modal="showEditDividendForm" @close-modal="showEditDividendForm = !showEditDividendForm">
+  <CommonModal modal-title="Edit dividend" v-if="showEditDividendForm" :show-modal="showEditDividendForm" @close-modal="showEditDividendForm = !showEditDividendForm">
     <PortfoliosDividendEditForm @dividendEdited="dividendEdited" :portfolios="portfolios" :portfolio="portfolio" :dividend="dividendBeingEdited"/>
   </CommonModal>
 </template>
@@ -104,7 +104,7 @@
 import vSelect from "vue-select";
 import useApiFetch from "../../composables/useApiFetch";
 import FlatPickr from 'vue-flatpickr-component';
-import useCompaniesSelect from "../../composables/useCompaniesSelect";
+import useCompaniesSelect from "../../composables/useCompaniesSearch";
 
 const props = defineProps({
   portfolio: {
@@ -128,6 +128,8 @@ const selectedCompany = ref(null);
 const companyChanged = (option) => {
   // filters.value.company_id = option.id;
 };
+
+//todo: load only companies saved in database
 companiesOptions.value = await fetchCompanies('', route.query.company_id ?? '');
 if(companiesOptions.value.length) {
   selectedCompany.value = companiesOptions.value.find(company => company.id == route.query.company_id);

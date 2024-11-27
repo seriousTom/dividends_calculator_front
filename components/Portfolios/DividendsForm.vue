@@ -11,10 +11,16 @@
     <div v-if="!newPortfolio">
       <h5>Dividends</h5>
       <div v-for="(dividend, di) in dividends" :key="'dividends' + di">
+        <PortfoliosCompanySearch :row-index="di" @companySelected="companySelected" />
         <div class="row">
           <div class="col-md-2">
-            <label class="form-label">Company</label>
-            <vSelect v-model="dividend.company_id" :reduce="company => company.id" :options="companiesOptions" @search="searchCompanies" />
+            <template v-if="dividend.company">
+              <label class="form-label">Company</label>
+              <div>
+                <strong>{{ dividend.company.name }}, {{ dividend.company.ticker }}</strong>
+              </div>
+            </template>
+<!--            <vSelect v-model="dividend.company_id" :reduce="company => company.id" :options="companiesOptions" @search="searchCompanies" />-->
           </div>
           <div class="col-md-2">
             <label class="form-label">Amount</label>
@@ -53,6 +59,7 @@
         <div class="row mt-3" v-if="hasServerValidationError('dividends.' + di + '.date')">
           <div class="col-md-12 text-danger" v-html="getServerValidationError('dividends.' + di + '.date')"></div>
         </div>
+        <hr>
       </div>
       <div class="row mt-3">
         <div class="col-md-12">
@@ -76,7 +83,8 @@
 <script setup>
 import flatPickr from 'vue-flatpickr-component';
 import vSelect from "vue-select";
-import useCompaniesSelect from "../../composables/useCompaniesSelect";
+// import useCompaniesSearch from "../../composables/useCompaniesSearch";
+// import useHandleServerValidationErrors from "../../composables/useHandleServerValidationErrors";
 
 const {serverValidationErrors, refreshErrors, clearErrors, hasServerValidationError, getServerValidationError} = useHandleServerValidationErrors();
 
@@ -100,7 +108,12 @@ const dividendTemplate = {
   amount: null,
   taxes_amount: null,
   currency_id: null,
-  company_id: null,
+  company: {
+    external: null,
+    id: null,
+    name: null,
+    ticker: null
+  },
   // portfolio_id: props.selectedPortfolio ? props.selectedPortfolio.id : null,
   date: null
 };
@@ -129,6 +142,15 @@ const removeDividend = (dividendIndex) => {
   dividends.value.splice(dividendIndex, 1);
 };
 
+const companySelected = (data) => {
+  // console.log(data);
+  // dividends.value[data.rowIndex].company = data.company;
+  dividends.value[data.rowIndex].company.external = data.company.external;
+  dividends.value[data.rowIndex].company.id = data.company.id;
+  dividends.value[data.rowIndex].company.name = data.company.name;
+  dividends.value[data.rowIndex].company.ticker = data.company.ticker;
+};
+
 const portfolioCreated = (portfolio) => {
   props.portfolios.push(portfolio);
   selectedPortfolioId.value = portfolio.id;
@@ -136,7 +158,7 @@ const portfolioCreated = (portfolio) => {
   emit('portfolioCreated', props.portfolios);
 };
 
-const {fetchCompanies, companiesOptions, searchCompanies} = useCompaniesSelect();
+const {fetchCompanies, companiesOptions, searchCompanies} = useCompaniesSearch();
 companiesOptions.value = await fetchCompanies();
 
 //fetch and search select2 options

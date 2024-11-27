@@ -45,7 +45,7 @@
 <script setup>
 import flatPickr from 'vue-flatpickr-component';
 import vSelect from "vue-select";
-import useCompaniesSelect from "../../composables/useCompaniesSelect";
+import useCompaniesSelect from "../../composables/useCompaniesSearch";
 
 const {serverValidationErrors, refreshErrors, clearErrors, hasServerValidationError, getServerValidationError} = useHandleServerValidationErrors();
 

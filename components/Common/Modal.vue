@@ -1,6 +1,6 @@
 <template>
   <div class="modal fade" :class="{show: showModal}" :style="{display: showModal ? 'block' : 'none'}">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">{{ modalTitle }}</h5>

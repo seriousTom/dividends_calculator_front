@@ -35,6 +35,7 @@ export default defineNuxtConfig({
     modules: [
         '@pinia/nuxt'
     ],
+    ssr: false
     // vite: {
     //     css: {
     //         preprocessorOptions: {
