@@ -11,10 +11,10 @@
     <div v-if="!newPortfolio">
       <h5>Dividends</h5>
       <div v-for="(dividend, di) in dividends" :key="'dividends' + di">
-        <PortfoliosCompanySearch :row-index="di" @companySelected="companySelected" />
+        <PortfoliosCompanySearch :row-index="di" @companySelected="companySelected" :key="'company-search-' + di" />
         <div class="row">
           <div class="col-md-2">
-            <template v-if="dividend.company">
+            <template v-if="dividend.company.name">
               <label class="form-label">Company</label>
               <div>
                 <strong>{{ dividend.company.name }}, {{ dividend.company.ticker }}</strong>
@@ -58,6 +58,9 @@
         </div>
         <div class="row mt-3" v-if="hasServerValidationError('dividends.' + di + '.date')">
           <div class="col-md-12 text-danger" v-html="getServerValidationError('dividends.' + di + '.date')"></div>
+        </div>
+        <div class="row mt-3" v-if="hasServerValidationError('dividends.' + di + '.company.external') || hasServerValidationError('dividends.' + di + '.company.id') || hasServerValidationError('dividends.' + di + '.company.name') || hasServerValidationError('dividends.' + di + '.company.ticker')">
+          <div class="col-md-12 text-danger">Company is required</div>
         </div>
         <hr>
       </div>
@@ -131,9 +134,22 @@ if(!selectedPortfolioId.value) {
   selectedPortfolioId.value = props.portfolios.length > 0 ? props.portfolios[0].id : null;
 }
 
+const createNewDividend = () => ({
+  amount: null,
+  taxes_amount: null,
+  currency_id: null,
+  company: {
+    external: null,
+    id: null,
+    name: null,
+    ticker: null,
+  },
+  date: null,
+});
+
 //add and remove dividends
 const addDividend = () => {
-  dividends.value.push({...dividendTemplate});
+  dividends.value.push(createNewDividend());
 };
 
 addDividend();
@@ -143,7 +159,6 @@ const removeDividend = (dividendIndex) => {
 };
 
 const companySelected = (data) => {
-  // console.log(data);
   // dividends.value[data.rowIndex].company = data.company;
   dividends.value[data.rowIndex].company.external = data.company.external;
   dividends.value[data.rowIndex].company.id = data.company.id;

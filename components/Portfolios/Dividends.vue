@@ -5,10 +5,12 @@
         <div class="col-md-3">
           <div class="form-group">
             <label>Company</label>
-            <vSelect @option:selected="companyChanged" v-model="selectedCompany" :options="companiesOptions" @search="searchCompanies">
-<!--              <template #selected-option="{ id, label, name }">-->
-<!--                {{ id }} - {{ label }}  - {{ name }}-->
-<!--              </template>-->
+<!--            <vSelect @option:selected="companyChanged" v-model="selectedCompany" :options="companiesOptions" @search="searchCompanies">-->
+<!--            </vSelect>-->
+            <vSelect @option:selected="companyChanged" v-model="selectedCompany" :options="companiesOptions">
+              <!--              <template #selected-option="{ id, label, name }">-->
+              <!--                {{ id }} - {{ label }}  - {{ name }}-->
+              <!--              </template>-->
             </vSelect>
           </div>
         </div>
@@ -129,8 +131,12 @@ const companyChanged = (option) => {
   // filters.value.company_id = option.id;
 };
 
-//todo: load only companies saved in database
-companiesOptions.value = await fetchCompanies('', route.query.company_id ?? '');
+companiesOptions.value = (await fetchCompanies('', route.query.company_id ?? ''));
+companiesOptions.value.map((company) => {
+  company.label = company.name + ', ' + company.ticker;
+  return company;
+});
+
 if(companiesOptions.value.length) {
   selectedCompany.value = companiesOptions.value.find(company => company.id == route.query.company_id);
 }

@@ -7,10 +7,15 @@
       </select>
       <div class="text-danger" v-html="getServerValidationError('portfolio_id')"></div>
     </div>
+<!--    <div class="mb-3">-->
+<!--        <label class="form-label">Company</label>-->
+<!--        <vSelect v-model="editedDividend.company_id" :reduce="company => company.id" :options="companiesOptions" @search="searchCompanies" />-->
+<!--        <div class="text-danger" v-html="getServerValidationError('company_id')"></div>-->
+<!--    </div>-->
     <div class="mb-3">
-        <label class="form-label">Company</label>
-        <vSelect v-model="editedDividend.company_id" :reduce="company => company.id" :options="companiesOptions" @search="searchCompanies" />
-        <div class="text-danger" v-html="getServerValidationError('company_id')"></div>
+      <label class="form-label">Company</label>
+      <vSelect v-model="editedDividend.company_id" :reduce="company => company.id" :options="companiesOptions" />
+      <div class="text-danger" v-html="getServerValidationError('company_id')"></div>
     </div>
     <div class="mb-3">
         <label class="form-label">Amount</label>
@@ -46,7 +51,6 @@
 import flatPickr from 'vue-flatpickr-component';
 import vSelect from "vue-select";
 import useCompaniesSelect from "../../composables/useCompaniesSearch";
-
 const {serverValidationErrors, refreshErrors, clearErrors, hasServerValidationError, getServerValidationError} = useHandleServerValidationErrors();
 
 const props = defineProps({
@@ -78,8 +82,15 @@ const editedDividend = reactive({
   date: null
 });
 
-watch(() => props.dividend, async () => {
-  companiesOptions.value = await fetchCompanies(props.dividend.company.name);
+const selectedCompany = ref(null);
+
+onMounted(async () => {
+  companiesOptions.value = await fetchCompanies();
+  // companiesOptions.value = await fetchCompanies(props.dividend.company.name);
+  companiesOptions.value.map((company) => {
+    company.label = company.name + ', ' + company.ticker;
+    return company;
+  });
 
   editedDividend.id = props.dividend.id;
   editedDividend.amount = props.dividend.amount;
@@ -88,7 +99,23 @@ watch(() => props.dividend, async () => {
   editedDividend.company_id = props.dividend.company.id;
   editedDividend.portfolio_id = props.dividend.portfolio_id;
   editedDividend.date = props.dividend.date;
+
+  selectedCompany.value = companiesOptions.value.find((element) => {
+    return element.id == editedDividend.company_id;
+  });
 });
+
+// watch(() => props.dividend, async () => {
+//   companiesOptions.value = await fetchCompanies(props.dividend.company.name);
+//
+//   editedDividend.id = props.dividend.id;
+//   editedDividend.amount = props.dividend.amount;
+//   editedDividend.taxes_amount = props.dividend.taxes_amount;
+//   editedDividend.currency_id = props.dividend.currency.id;
+//   editedDividend.company_id = props.dividend.company.id;
+//   editedDividend.portfolio_id = props.dividend.portfolio_id;
+//   editedDividend.date = props.dividend.date;
+// });
 
 const {data: currencies} = await useApiFetch('/currencies');
 
