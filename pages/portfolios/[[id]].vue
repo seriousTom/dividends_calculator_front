@@ -3,6 +3,7 @@
     <div class="container py-5">
       <div class="mb-3">
         <button @click="showAddDividendsForm = !showAddDividendsForm" type="button" class="btn btn-primary">Add dividends</button>
+        <button @click="showUploadDividendsReportForm = !showUploadDividendsReportForm" type="button" class="btn btn-primary ms-1">Upload Dividends Report</button>
       </div>
       <div class="card">
         <div class="card-header">
@@ -17,6 +18,9 @@
   <CommonModal modal-title="Add dividends" v-if="showAddDividendsForm" :show-modal="showAddDividendsForm" @close-modal="showAddDividendsForm = !showAddDividendsForm">
     <PortfoliosDividendsForm @dividendsCreated="dividendsCreated" @portfolioCreated="portfolioCreated" :portfolios="portfolios" :selected-portfolio="selectedPortfolio"/>
   </CommonModal>
+  <CommonModal modal-title="Upload report" v-if="showUploadDividendsReportForm" :show-modal="showUploadDividendsReportForm" @close-modal="showUploadDividendsReportForm = !showUploadDividendsReportForm">
+    <PortfoliosUploadReport />
+  </CommonModal>
 </template>
 <script setup>
 definePageMeta({
@@ -30,6 +34,7 @@ const route = useRoute();
 const selectedPortfolioId = route.params.id ?? null;
 
 const showAddDividendsForm = ref(false);
+const showUploadDividendsReportForm = ref(false);
 
 const portfolios = ref([]);
 
